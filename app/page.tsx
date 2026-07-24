@@ -1,6 +1,6 @@
 'use client'
 
-import { useRef, useState, useEffect, useCallback } from 'react'
+import { useRef, useState, useEffect } from 'react'
 import { Background } from '@/components/Background/Background'
 import { Cursor } from '@/components/Cursor/Cursor'
 import { Avatar } from '@/components/Avatar/Avatar'
@@ -9,65 +9,89 @@ import { TypingAnimation } from '@/components/Subtitle/TypingAnimation'
 import { SocialButtons } from '@/components/Social/SocialButtons'
 import { CodeLines } from '@/components/CodeLines/CodeLines'
 import { TypingPlaceholder, TypingHandle } from '@/components/TypingPlaceholder/TypingPlaceholder'
-import { AdminPanel } from '@/components/AdminPanel/AdminPanel'
-import { AdminProvider, useAdminData } from '@/lib/admin-context'
 import { FiTerminal } from 'react-icons/fi'
 
-function HomePage() {
-  const typingRef = useRef<TypingHandle>(null!)
-  const [adminOpen, setAdminOpen] = useState(false)
-  const [time, setTime] = useState('')
-  const { data } = useAdminData()
-  const clickCountRef = useRef(0)
-  const clickTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+interface Config {
+  name: string
+  firstNameColor: string
+  lastNameColor: string
+  availableText: string
+  roleTexts: string[]
+  location: string
+  timezone: string
+  socialLinks: { name: string; url: string }[]
+  messages: { text: string; href: string }[]
+}
 
-  const handleDotClick = useCallback(() => {
-    clickCountRef.current++
-    if (clickCountRef.current >= 3) {
-      clickCountRef.current = 0
-      if (clickTimerRef.current) clearTimeout(clickTimerRef.current)
-      setAdminOpen((p) => !p)
-    } else {
-      if (clickTimerRef.current) clearTimeout(clickTimerRef.current)
-      clickTimerRef.current = setTimeout(() => { clickCountRef.current = 0 }, 1000)
-    }
+const DEFAULT: Config = {
+  name: 'Mobin Bastai',
+  firstNameColor: '#f78b1c',
+  lastNameColor: '#f4ce23',
+  availableText: 'available for freelance',
+  roleTexts: ['Full Stack Developer', 'Flutter Developer', 'AI Engineer', 'Backend Developer', 'Open Source Enthusiast'],
+  location: 'Tehran, Iran',
+  timezone: 'Asia/Tehran',
+  socialLinks: [
+    { name: 'GitHub', url: '#' },
+    { name: 'LinkedIn', url: '#' },
+    { name: 'Telegram', url: '#' },
+    { name: 'Instagram', url: '#' },
+    { name: 'Email', url: '#' },
+    { name: 'Resume', url: '#' },
+  ],
+  messages: [
+    { text: 'AI Platform — Real-time inference engine', href: '#' },
+    { text: 'FlutterFlow — Cross-platform app builder', href: '#' },
+    { text: 'DevOps Dashboard — Infra monitoring', href: '#' },
+  ],
+}
+
+async function fetchConfig(): Promise<Config> {
+  try {
+    const res = await fetch('/config.json?t=' + Date.now())
+    if (res.ok) return await res.json()
+  } catch {}
+  return DEFAULT
+}
+
+export default function Home() {
+  const typingRef = useRef<TypingHandle>(null!)
+  const [cfg, setCfg] = useState<Config>(DEFAULT)
+  const [time, setTime] = useState('')
+
+  useEffect(() => {
+    fetchConfig().then(setCfg)
   }, [])
 
   useEffect(() => {
     const update = () => {
-      setTime(new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', timeZone: data.timezone }))
+      setTime(new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', timeZone: cfg.timezone }))
     }
     update()
     const timer = setInterval(update, 1000)
     return () => clearInterval(timer)
-  }, [data.timezone])
-
-
+  }, [cfg.timezone])
 
   return (
     <>
       <Background />
       <Cursor />
-      <AdminPanel open={adminOpen} onClose={() => setAdminOpen(false)} />
 
       <div className="fixed inset-0 pointer-events-none z-[1]" style={{ background: 'repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.03) 2px, rgba(0,0,0,0.03) 4px)' }} />
 
       <section className="relative z-10 min-h-screen flex items-center justify-center overflow-hidden select-none" style={{ padding: '32px 24px' }}>
         <div className="flex flex-col items-center text-center w-full max-w-[400px]">
-          <div
-            style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 20, fontFamily: 'var(--font-mono)', fontSize: 12, color: 'var(--text-secondary)', letterSpacing: '0.5px', textTransform: 'lowercase', cursor: 'pointer' }}
-            onClick={handleDotClick}
-          >
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 20, fontFamily: 'var(--font-mono)', fontSize: 12, color: 'var(--text-secondary)', letterSpacing: '0.5px', textTransform: 'lowercase' }}>
             <div style={{ position: 'relative', width: 8, height: 8 }}>
               <div style={{ width: 8, height: 8, borderRadius: '50%', backgroundColor: 'var(--syntax-string)', boxShadow: '0 0 12px var(--syntax-string)', animation: 'pulse-dot 2s ease-in-out infinite' }} />
             </div>
-            <span>{data.availableText}</span>
+            <span>{cfg.availableText}</span>
           </div>
 
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 16, width: '100%', marginBottom: 32 }}>
             <Avatar onClick={() => {}} />
-            <Name firstNameColor={data.firstNameColor} lastNameColor={data.lastNameColor} />
-            <TypingAnimation texts={data.roleTexts} />
+            <Name firstNameColor={cfg.firstNameColor} lastNameColor={cfg.lastNameColor} />
+            <TypingAnimation texts={cfg.roleTexts} />
           </div>
 
           <div style={{
@@ -81,7 +105,7 @@ function HomePage() {
             <div style={{ position: 'relative', zIndex: 1 }}>
               <CodeLines />
               <div style={{ display: 'flex', gap: 8, marginTop: 16 }}>
-                <TypingPlaceholder ref={typingRef} messages={data.messages} />
+                <TypingPlaceholder ref={typingRef} messages={cfg.messages} />
                 <button
                   type="button"
                   onClick={() => typingRef.current?.next()}
@@ -104,25 +128,17 @@ function HomePage() {
             </div>
           </div>
 
-          <SocialButtons links={data.socialLinks} />
+          <SocialButtons links={cfg.socialLinks} />
 
           <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginTop: 24, fontSize: 11, fontFamily: 'var(--font-mono)', color: 'var(--text-muted)' }}>
-            <span>{data.location}</span>
+            <span>{cfg.location}</span>
             <span style={{ width: 3, height: 3, borderRadius: '50%', backgroundColor: 'var(--surface-border)' }} />
-            <span>{time} {data.timezone.split('/').pop()}</span>
+            <span>{time} {cfg.timezone.split('/').pop()}</span>
           </div>
         </div>
       </section>
 
       <style>{`@keyframes pulse-dot { 0%,100% { opacity: 1; } 50% { opacity: 0.25; } }`}</style>
     </>
-  )
-}
-
-export default function Home() {
-  return (
-    <AdminProvider>
-      <HomePage />
-    </AdminProvider>
   )
 }
