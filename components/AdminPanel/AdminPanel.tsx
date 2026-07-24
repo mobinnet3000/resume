@@ -2,8 +2,8 @@
 
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { FiX, FiLock, FiSave, FiPlus, FiTrash2, FiDownload } from 'react-icons/fi'
-import { checkAuth, useAdmin, getConfigCode } from '@/lib/admin-store'
+import { FiX, FiLock, FiSave, FiPlus, FiTrash2, FiDownload, FiUpload } from 'react-icons/fi'
+import { checkAuth, useAdmin, getConfigCode, publishConfig } from '@/lib/admin-store'
 
 interface Props {
   open: boolean
@@ -168,25 +168,37 @@ export function AdminPanel({ open, onClose }: Props) {
                   </div>
                 )}
 
-                <div className="flex items-center justify-between pt-4 border-t flex-wrap gap-2" style={{ borderColor: 'var(--surface-border)' }}>
-                  <button onClick={handleSave} className="flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-medium transition-all" style={{ backgroundColor: saved ? 'var(--syntax-string)' : 'var(--accent)', color: 'var(--bg)' }}>
-                    <FiSave className="w-3.5 h-3.5" /> {saved ? 'Saved ✓' : 'Save to my browser'}
-                  </button>
-                  <button
-                    onClick={() => {
-                      const json = getConfigCode(data)
-                      const blob = new Blob([json], { type: 'application/json' })
-                      const url = URL.createObjectURL(blob)
-                      const a = document.createElement('a')
-                      a.href = url; a.download = 'config.json'; a.click()
-                      URL.revokeObjectURL(url)
-                    }}
-                    className="flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-medium transition-all"
-                    style={{ backgroundColor: 'rgba(255,255,255,0.04)', color: 'var(--text-secondary)', border: '1px solid var(--surface-border)' }}
-                  >
-                    <FiDownload className="w-3.5 h-3.5" /> Download config.json
-                  </button>
-                  <p className="text-[10px]" style={{ color: 'var(--text-muted)' }}>Put config.json in public/ folder and git push to publish for everyone</p>
+                <div className="flex flex-col gap-3 pt-4 border-t" style={{ borderColor: 'var(--surface-border)' }}>
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <button onClick={handleSave} className="flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-medium transition-all" style={{ backgroundColor: saved ? 'var(--syntax-string)' : 'var(--accent)', color: 'var(--bg)' }}>
+                      <FiSave className="w-3.5 h-3.5" /> {saved ? 'Saved ✓' : 'Save to my browser'}
+                    </button>
+                    <button
+                      onClick={async () => {
+                        const ok = await publishConfig(data)
+                        if (ok) alert('Published for everyone!')
+                        else alert('Failed to publish. Changes saved locally.')
+                      }}
+                      className="flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-medium transition-all"
+                      style={{ backgroundColor: 'var(--syntax-string)', color: '#000' }}
+                    >
+                      <FiUpload className="w-3.5 h-3.5" /> Publish for Everyone
+                    </button>
+                    <button
+                      onClick={() => {
+                        const json = getConfigCode(data)
+                        const blob = new Blob([json], { type: 'application/json' })
+                        const url = URL.createObjectURL(blob)
+                        const a = document.createElement('a')
+                        a.href = url; a.download = 'config.json'; a.click()
+                        URL.revokeObjectURL(url)
+                      }}
+                      className="flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-medium"
+                      style={{ backgroundColor: 'rgba(255,255,255,0.04)', color: 'var(--text-secondary)' }}
+                    >
+                      <FiDownload className="w-3.5 h-3.5" /> Download
+                    </button>
+                  </div>
                 </div>
               </div>
             )}

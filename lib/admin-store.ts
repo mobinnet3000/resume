@@ -77,6 +77,17 @@ export function getConfigCode(data: AdminData): string {
   return JSON.stringify(data, null, 2)
 }
 
+export async function publishConfig(data: AdminData): Promise<boolean> {
+  try {
+    const res = await fetch('/api/config', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ secret: 'mobin1379', config: data }),
+    })
+    return res.ok
+  } catch { return false }
+}
+
 export function useAdmin() {
   const [data, setData] = useState<AdminData>(DEFAULT_DATA)
   const [loaded, setLoaded] = useState(false)
