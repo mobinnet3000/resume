@@ -41,7 +41,7 @@ export function ParticleField({ mouse, clicks, explosions, isIdle }: Props) {
   const clockRef = useRef(0)
   const { viewport } = useThree()
 
-  const { count, particleData, linePositions, lineOpacities } = useMemo(() => {
+  const { particleData, linePositions, lineOpacities } = useMemo(() => {
     const count = PARTICLE_COUNT
     const pos = new Float32Array(count * 3)
     const col = new Float32Array(count * 3)
@@ -99,7 +99,6 @@ export function ParticleField({ mouse, clicks, explosions, isIdle }: Props) {
     particlesRef.current = particles
 
     return {
-      count,
       particleData: { positions: pos, colors: col, sizes: sz, pairs },
       linePositions: lPos,
       lineOpacities: lOp,
@@ -108,7 +107,6 @@ export function ParticleField({ mouse, clicks, explosions, isIdle }: Props) {
 
   const pairs = particleData.pairs
 
-  // eslint-disable-next-line react-hooks/rules-of-hooks
   useFrame((_, delta) => {
     clockRef.current += delta
     const particles = particlesRef.current
@@ -221,7 +219,6 @@ export function ParticleField({ mouse, clicks, explosions, isIdle }: Props) {
         linePositions[li + 3] = pos[pj3]; linePositions[li + 4] = pos[pj3 + 1]; linePositions[li + 5] = pos[pj3 + 2]
         idx++
       }
-      // eslint-disable-next-line react-hooks/immutability
       linesRef.current.geometry.attributes.position.needsUpdate = true
     }
   })

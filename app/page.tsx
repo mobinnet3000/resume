@@ -13,6 +13,8 @@ import { TechPills } from '@/components/TechStack/TechPills'
 import { SkillTags } from '@/components/Skills/SkillTags'
 import { StatusBar } from '@/components/Status/StatusBar'
 import { AboutModal } from '@/components/Modal/AboutModal'
+import { ThemeSwitcher } from '@/components/ThemeSwitcher/ThemeSwitcher'
+import { GitHubStats } from '@/components/GitHub/GitHubStats'
 import { useScrollIntercept } from '@/hooks/useScrollIntercept'
 import { useEasterEggs } from '@/hooks/useEasterEggs'
 import { useReducedMotion } from '@/hooks/useReducedMotion'
@@ -39,6 +41,11 @@ const CommandPalette = dynamic(
 
 const Terminal = dynamic(
   () => import('@/components/Terminal/Terminal').then((m) => ({ default: m.Terminal })),
+  { ssr: false }
+)
+
+const RippleOverlay = dynamic(
+  () => import('@/components/RippleOverlay/RippleOverlay').then((m) => ({ default: m.RippleOverlay })),
   { ssr: false }
 )
 
@@ -120,7 +127,9 @@ export default function Home() {
 
       <Background />
       {!reduce && <CustomCursor />}
+      {!reduce && <RippleOverlay />}
       <Spotlight />
+      <ThemeSwitcher />
 
       <AnimatePresence>
         {toast && <SudoToast message={toast} onClose={() => setToast(null)} />}
@@ -149,6 +158,7 @@ export default function Home() {
           <Projects />
           <TechPills />
           <SkillTags />
+          <GitHubStats />
           <StatusBar />
         </motion.div>
       </main>

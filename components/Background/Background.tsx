@@ -1,7 +1,7 @@
 'use client'
 
 import dynamic from 'next/dynamic'
-import { AnimatedGradient } from './AnimatedGradient'
+import { ShaderBackground } from './ShaderBackground'
 import { NoiseTexture } from './NoiseTexture'
 import { GlowingBlobs } from './GlowingBlobs'
 import { DepthFog } from './DepthFog'
@@ -14,7 +14,7 @@ const Scene = dynamic(
 export function Background() {
   return (
     <>
-      <AnimatedGradient />
+      <ShaderBackground />
       <NoiseTexture />
       <GlowingBlobs />
       <DepthFog />

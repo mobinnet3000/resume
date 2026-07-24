@@ -4,11 +4,6 @@ import { useRef, useMemo } from 'react'
 import { motion } from 'framer-motion'
 import { TECH_STACK } from '@/constants'
 
-function seededRandom(seed: number): number {
-  const x = Math.sin(seed) * 10000
-  return x - Math.floor(x)
-}
-
 export function TechPills() {
   const ref = useRef<HTMLDivElement>(null!)
 

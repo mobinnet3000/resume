@@ -54,7 +54,6 @@ export function CommandPalette({ open, onClose, onOpenAbout }: Props) {
       setTimeout(() => inputRef.current?.focus(), 50)
       // eslint-disable-next-line react-hooks/set-state-in-effect
       setQuery('')
-      // eslint-disable-next-line react-hooks/set-state-in-effect
       setActiveIndex(0)
     }
   }, [open])

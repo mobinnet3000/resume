@@ -46,7 +46,6 @@ export function StarField({ count = 1500 }) {
       const twinkle = 0.5 + 0.5 * Math.sin(clock.elapsedTime * (0.5 + seededRandom(i * 31) * 2) + phases[i])
       sizes[i] = (0.05 + seededRandom(i * 17) * 0.15) * (0.6 + 0.4 * twinkle)
     }
-    // eslint-disable-next-line react-hooks/immutability
     ref.current.geometry.attributes.size.needsUpdate = true
   })
 
