@@ -53,8 +53,8 @@ export function CodeLines() {
           display: 'flex', flexDirection: 'column', gap: 16, padding: '8px 0',
           animation: reduce ? 'none' : `scroll-up 12s linear infinite`,
         }}>
-          {/* Duplicate rows for seamless loop */}
-          {rows.concat(rows).map((r, i) => renderRow(r, i))}
+          {/* Duplicate rows for seamless loop — unique keys via index */}
+          {[...rows, ...rows.map((r) => ({ ...r, id: r.id + 1000 }))].map((r, i) => renderRow(r, i))}
         </div>
       </div>
       <style>{`
