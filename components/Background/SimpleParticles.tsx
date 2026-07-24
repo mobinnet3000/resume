@@ -30,7 +30,7 @@ export function SimpleParticles() {
       y: Math.random() * canvas.height,
       vx: (Math.random() - 0.5) * 0.3,
       vy: (Math.random() - 0.5) * 0.3,
-      radius: 1.5 + Math.random() * 2.5,
+      radius: 2 + Math.random() * 3,
       color: COLORS[Math.floor(Math.random() * COLORS.length)],
     }))
 
