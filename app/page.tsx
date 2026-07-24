@@ -1,5 +1,6 @@
 'use client'
 
+import { useRef } from 'react'
 import { Background } from '@/components/Background/Background'
 import { Cursor } from '@/components/Cursor/Cursor'
 import { Avatar } from '@/components/Avatar/Avatar'
@@ -7,10 +8,12 @@ import { Name } from '@/components/Name/Name'
 import { TypingAnimation } from '@/components/Subtitle/TypingAnimation'
 import { SocialButtons } from '@/components/Social/SocialButtons'
 import { CodeLines } from '@/components/CodeLines/CodeLines'
-import { TypingPlaceholder } from '@/components/TypingPlaceholder/TypingPlaceholder'
+import { TypingPlaceholder, TypingHandle } from '@/components/TypingPlaceholder/TypingPlaceholder'
 import { FiTerminal } from 'react-icons/fi'
 
 export default function Home() {
+  const typingRef = useRef<TypingHandle>(null!)
+
   return (
     <>
       <Background />
@@ -35,8 +38,28 @@ export default function Home() {
           <div className="w-full p-6 rounded-2xl" style={{ backgroundColor: 'var(--surface)', border: '1px solid var(--surface-border)', boxShadow: '0 20px 40px -12px rgba(0,0,0,0.4), 0 8px 16px -8px rgba(0,0,0,0.25)' }}>
             <CodeLines />
             <div className="flex gap-2 mt-4">
-              <TypingPlaceholder />
-              <button type="button" className="w-[48px] h-[48px] rounded-xl flex items-center justify-center shrink-0 transition-colors duration-200" style={{ backgroundColor: 'var(--accent)', color: 'var(--bg)', border: 'none', cursor: 'pointer' }} aria-label="Next message">
+              <TypingPlaceholder ref={typingRef} />
+              <button
+                type="button"
+                onClick={() => typingRef.current?.next()}
+                className="w-[48px] h-[48px] rounded-xl flex items-center justify-center shrink-0 transition-all duration-200"
+                style={{ backgroundColor: 'var(--accent)', color: 'var(--bg)', border: 'none', cursor: 'pointer' }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.boxShadow = '0 0 24px var(--accent)'
+                  e.currentTarget.style.transform = 'scale(1.08)'
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.boxShadow = 'none'
+                  e.currentTarget.style.transform = 'scale(1)'
+                }}
+                onMouseDown={(e) => {
+                  e.currentTarget.style.transform = 'scale(0.92)'
+                }}
+                onMouseUp={(e) => {
+                  e.currentTarget.style.transform = 'scale(1.08)'
+                }}
+                aria-label="Next message"
+              >
                 <FiTerminal className="w-5 h-5" />
               </button>
             </div>

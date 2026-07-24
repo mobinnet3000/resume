@@ -22,7 +22,6 @@ export const TypingPlaceholder = forwardRef<TypingHandle>(function TypingPlaceho
   const [href, setHref] = useState('#')
   const stateRef = useRef({ msgIdx: 0, charIdx: 0, isDeleting: false })
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
-  const pausedRef = useRef(false)
 
   const updateDisplay = useCallback((msgIdx: number, charIdx: number) => {
     const msg = MESSAGES[msgIdx % MESSAGES.length]
@@ -83,8 +82,6 @@ export const TypingPlaceholder = forwardRef<TypingHandle>(function TypingPlaceho
       href={href}
       target="_blank"
       rel="noopener noreferrer"
-      onMouseEnter={() => { pausedRef.current = true }}
-      onMouseLeave={() => { pausedRef.current = false }}
       style={{
         height: 48,
         padding: '0 16px',
@@ -92,7 +89,7 @@ export const TypingPlaceholder = forwardRef<TypingHandle>(function TypingPlaceho
         fontSize: 14,
         color: 'var(--text-secondary)',
         backgroundColor: 'var(--surface)',
-        border: '1px solid var(--accent)',
+        border: '1px solid var(--surface-border)',
         borderRadius: 10,
         textAlign: 'left',
         whiteSpace: 'nowrap',
@@ -104,10 +101,19 @@ export const TypingPlaceholder = forwardRef<TypingHandle>(function TypingPlaceho
         display: 'block',
         lineHeight: '48px',
         textDecoration: 'none',
-        transition: 'color 0.18s',
+        transition: 'border-color 0.2s, color 0.2s, box-shadow 0.2s',
       }}
-      className="group"
-      onFocus={() => {}}
+      className="typing-link"
+      onMouseEnter={(e) => {
+        e.currentTarget.style.borderColor = 'var(--accent)'
+        e.currentTarget.style.color = 'var(--accent)'
+        e.currentTarget.style.boxShadow = '0 0 20px var(--accent-soft)'
+      }}
+      onMouseLeave={(e) => {
+        e.currentTarget.style.borderColor = 'var(--surface-border)'
+        e.currentTarget.style.color = 'var(--text-secondary)'
+        e.currentTarget.style.boxShadow = 'none'
+      }}
     >
       {text || '\u00A0'}
     </a>
