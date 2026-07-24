@@ -48,12 +48,13 @@ export function CodeLines() {
       wrap.style.cssText = 'display:flex;align-items:center;flex-shrink:0;height:24px;'
       const e1 = document.createElement('div')
       e1.style.cssText = `height:8px;border-radius:4px;background:${r.color};width:0%;margin-left:${r.indent * 24}px;`
-      e1.animate([{ width: '0%' }, { width: `${r.w1}%` }], { duration: 400, easing: 'cubic-bezier(0.22,1,0.36,1)', fill: 'forwards', delay: r.id * 60 })
+      const delay = r.id < 100 ? r.id * 80 : 0
+      e1.animate([{ width: '0%' }, { width: `${r.w1}%` }], { duration: 400, easing: 'cubic-bezier(0.22,1,0.36,1)', fill: 'forwards', delay })
       wrap.appendChild(e1)
       if (r.w2 > 0) {
         const e2 = document.createElement('div')
         e2.style.cssText = `height:8px;border-radius:4px;background:${r.color};width:0%;margin-left:6px;`
-        e2.animate([{ width: '0%' }, { width: `${r.w2}%` }], { duration: 400, easing: 'cubic-bezier(0.22,1,0.36,1)', fill: 'forwards', delay: r.id * 60 })
+        e2.animate([{ width: '0%' }, { width: `${r.w2}%` }], { duration: 400, easing: 'cubic-bezier(0.22,1,0.36,1)', fill: 'forwards', delay })
         wrap.appendChild(e2)
       }
       track.appendChild(wrap)
