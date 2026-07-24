@@ -57,10 +57,11 @@ async function fetchConfig(): Promise<Config> {
 export default function Home() {
   const typingRef = useRef<TypingHandle>(null!)
   const [cfg, setCfg] = useState<Config>(DEFAULT)
+  const [ready, setReady] = useState(false)
   const [time, setTime] = useState('')
 
   useEffect(() => {
-    fetchConfig().then(setCfg)
+    fetchConfig().then((c) => { setCfg(c); setReady(true) })
   }, [])
 
   useEffect(() => {
