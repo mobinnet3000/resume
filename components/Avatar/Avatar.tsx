@@ -1,6 +1,7 @@
 'use client'
 
 import { useRef, useState } from 'react'
+import Image from 'next/image'
 import { motion, useMotionValue, useSpring } from 'framer-motion'
 import { useReducedMotion } from '@/hooks/useReducedMotion'
 
@@ -41,7 +42,7 @@ export function Avatar({ onClick }: { onClick: () => void }) {
       aria-label="About Me"
     >
       <div className="w-full h-full rounded-full bg-[var(--surface)] flex items-center justify-center overflow-hidden border-2 border-transparent relative">
-        <span className="text-4xl select-none">😀</span>
+        <Image src="/avatar.png" alt="Mobin Bastai" width={100} height={100} className="w-full h-full object-cover" />
       </div>
       <motion.div
         className="absolute -inset-[3px] rounded-full pointer-events-none"

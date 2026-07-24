@@ -28,17 +28,7 @@ function HomePage() {
     return () => clearInterval(timer)
   }, [data.timezone])
 
-  // Secret admin access: Ctrl+Shift+A
-  useEffect(() => {
-    const handle = (e: KeyboardEvent) => {
-      if (e.ctrlKey && e.shiftKey && e.key === 'A') {
-        e.preventDefault()
-        setAdminOpen((p) => !p)
-      }
-    }
-    document.addEventListener('keydown', handle)
-    return () => document.removeEventListener('keydown', handle)
-  }, [])
+
 
   return (
     <>
@@ -50,7 +40,10 @@ function HomePage() {
 
       <section className="relative z-10 min-h-screen flex items-center justify-center overflow-hidden select-none" style={{ padding: '32px 24px' }}>
         <div className="flex flex-col items-center text-center w-full max-w-[400px]">
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 20, fontFamily: 'var(--font-mono)', fontSize: 12, color: 'var(--text-secondary)', letterSpacing: '0.5px', textTransform: 'lowercase' }}>
+          <div
+            style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 20, fontFamily: 'var(--font-mono)', fontSize: 12, color: 'var(--text-secondary)', letterSpacing: '0.5px', textTransform: 'lowercase', cursor: 'pointer' }}
+            onClick={() => setAdminOpen((p) => !p)}
+          >
             <div style={{ position: 'relative', width: 8, height: 8 }}>
               <div style={{ width: 8, height: 8, borderRadius: '50%', backgroundColor: 'var(--syntax-string)', boxShadow: '0 0 12px var(--syntax-string)', animation: 'pulse-dot 2s ease-in-out infinite' }} />
             </div>
