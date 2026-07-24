@@ -28,9 +28,9 @@ export function SimpleParticles() {
     const balls: Ball[] = Array.from({ length: COUNT }, () => ({
       x: Math.random() * canvas.width,
       y: Math.random() * canvas.height,
-      vx: (Math.random() - 0.5) * 0.4,
-      vy: (Math.random() - 0.5) * 0.4,
-      radius: 0.5 + Math.random() * 1.5,
+      vx: (Math.random() - 0.5) * 0.3,
+      vy: (Math.random() - 0.5) * 0.3,
+      radius: 1.5 + Math.random() * 2.5,
       color: COLORS[Math.floor(Math.random() * COLORS.length)],
     }))
 
@@ -44,26 +44,31 @@ export function SimpleParticles() {
         const dy = mouse.y - b.y
         const dist = Math.sqrt(dx * dx + dy * dy)
 
-        if (dist < 150 && dist > 0) {
-          const str = (1 - dist / 150) * 0.04
-          b.vx += -dy / dist * str + dx / dist * str * 0.3
-          b.vy += dx / dist * str + dy / dist * str * 0.3
+        if (dist < 180 && dist > 0) {
+          const str = (1 - dist / 180) * 0.06
+          b.vx += (-dy / dist * str * 1.2 + dx / dist * str * 0.5)
+          b.vy += (dx / dist * str * 1.2 + dy / dist * str * 0.5)
         }
 
-        b.vx *= 0.98
-        b.vy *= 0.98
         b.x += b.vx
         b.y += b.vy
+        b.vx *= 0.97
+        b.vy *= 0.97
 
-        if (b.x < -10) b.x = canvas.width + 10
-        if (b.x > canvas.width + 10) b.x = -10
-        if (b.y < -10) b.y = canvas.height + 10
-        if (b.y > canvas.height + 10) b.y = -10
+        if (b.x < -20) b.x = canvas.width + 20
+        if (b.x > canvas.width + 20) b.x = -20
+        if (b.y < -20) b.y = canvas.height + 20
+        if (b.y > canvas.height + 20) b.y = -20
 
-        ctx.globalAlpha = 0.7
+        const scale = dist < 180 ? 1 + (1 - dist / 180) * 2 : 1
+        const alpha = dist < 180 ? 0.5 + (1 - dist / 180) * 0.4 : 0.5
+
+        ctx.globalAlpha = alpha
         ctx.fillStyle = b.color
+        ctx.shadowColor = b.color
+        ctx.shadowBlur = 8
         ctx.beginPath()
-        ctx.arc(b.x, b.y, b.radius * (dist < 150 ? 1 + (1 - dist / 150) * 2 : 1), 0, Math.PI * 2)
+        ctx.arc(b.x, b.y, b.radius * scale, 0, Math.PI * 2)
         ctx.fill()
       }
 

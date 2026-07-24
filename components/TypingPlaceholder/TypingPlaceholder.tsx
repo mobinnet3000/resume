@@ -10,8 +10,8 @@ const MESSAGES = [
 
 const TYPE_SPEED = 60
 const DELETE_SPEED = 30
-const PAUSE_AFTER_TYPE = 1800
-const PAUSE_AFTER_DELETE = 400
+const PAUSE_AFTER_TYPE = 2000
+const PAUSE_AFTER_DELETE = 500
 
 export interface TypingHandle {
   next: () => void
@@ -20,7 +20,7 @@ export interface TypingHandle {
 export const TypingPlaceholder = forwardRef<TypingHandle>(function TypingPlaceholder(_props, ref) {
   const [text, setText] = useState('')
   const [href, setHref] = useState('#')
-  const stateRef = useRef({ msgIdx: 0, charIdx: 0, isDeleting: false })
+  const stateRef = useRef({ msgIdx: 0, charIdx: 0, isDeleting: false, paused: false })
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   const updateDisplay = useCallback((msgIdx: number, charIdx: number) => {
@@ -29,8 +29,14 @@ export const TypingPlaceholder = forwardRef<TypingHandle>(function TypingPlaceho
     setHref(msg.href)
   }, [])
 
+  const stopTimer = useCallback(() => {
+    if (timerRef.current) { clearTimeout(timerRef.current); timerRef.current = null }
+  }, [])
+
   const tick = useCallback(() => {
     const st = stateRef.current
+    if (st.paused) return
+
     const msg = MESSAGES[st.msgIdx % MESSAGES.length]
 
     if (st.isDeleting) {
@@ -55,29 +61,28 @@ export const TypingPlaceholder = forwardRef<TypingHandle>(function TypingPlaceho
     }
   }, [updateDisplay])
 
-  const startLoop = useCallback(() => {
-    if (timerRef.current) clearTimeout(timerRef.current)
-    timerRef.current = setTimeout(tick, TYPE_SPEED)
-  }, [tick])
-
   useImperativeHandle(ref, () => ({
     next: () => {
       const st = stateRef.current
       st.msgIdx = (st.msgIdx + 1) % MESSAGES.length
-      st.charIdx = 0
-      st.isDeleting = false
-      updateDisplay(st.msgIdx, 0)
-      if (timerRef.current) clearTimeout(timerRef.current)
-      timerRef.current = setTimeout(tick, TYPE_SPEED)
+      st.charIdx = MESSAGES[st.msgIdx].text.length
+      st.isDeleting = true
+      st.paused = true
+      updateDisplay(st.msgIdx, st.charIdx)
+      stopTimer()
+      // Resume after a pause
+      timerRef.current = setTimeout(() => {
+        stateRef.current.paused = false
+        tick()
+      }, 3000)
     },
-  }), [tick, updateDisplay])
+  }), [tick, updateDisplay, stopTimer])
 
   useEffect(() => {
-    startLoop()
-    return () => { if (timerRef.current) clearTimeout(timerRef.current) }
-  }, [startLoop])
-
-  const isHovered = useRef(false)
+    stopTimer()
+    timerRef.current = setTimeout(tick, TYPE_SPEED)
+    return stopTimer
+  }, [tick, stopTimer])
 
   return (
     <a
@@ -86,14 +91,12 @@ export const TypingPlaceholder = forwardRef<TypingHandle>(function TypingPlaceho
       rel="noopener noreferrer"
       className="typing-link"
       onMouseEnter={(e) => {
-        isHovered.current = true
         e.currentTarget.style.borderColor = 'var(--accent)'
         e.currentTarget.style.color = 'var(--text-primary)'
         e.currentTarget.style.boxShadow = '0 0 24px var(--accent-soft)'
         e.currentTarget.style.backgroundColor = '#1a1a24'
       }}
       onMouseLeave={(e) => {
-        isHovered.current = false
         e.currentTarget.style.borderColor = 'var(--surface-border)'
         e.currentTarget.style.color = 'var(--text-secondary)'
         e.currentTarget.style.boxShadow = 'none'
