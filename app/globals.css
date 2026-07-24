@@ -42,6 +42,46 @@
   .animate-spin-slow {
     animation: spin-slow 3s linear infinite;
   }
+
+  .glass-card {
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+  }
+
+  .glass-card-hover {
+    transition: background 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .glass-card-hover:hover {
+    background: rgba(255, 255, 255, 0.04);
+    border-color: var(--theme-primary, #3b82f6);
+    box-shadow: 0 0 30px var(--theme-glow, rgba(59, 130, 246, 0.08));
+  }
+
+  .glass-edge {
+    position: relative;
+  }
+
+  .glass-edge::after {
+    content: '';
+    position: absolute;
+    inset: -1px;
+    border-radius: inherit;
+    background: linear-gradient(135deg, var(--theme-primary, #3b82f6), transparent, var(--theme-secondary, #8b5cf6));
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: -1;
+    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    mask-composite: exclude;
+    -webkit-mask-composite: xor;
+    padding: 1px;
+  }
+
+  .glass-edge:hover::after {
+    opacity: 0.3;
+  }
 }
 
 @layer utilities {

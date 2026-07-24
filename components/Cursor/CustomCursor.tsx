@@ -120,12 +120,22 @@ export function CustomCursor() {
       {ripples.map((r) => (
         <motion.div
           key={r.id}
-          className="fixed top-0 left-0 pointer-events-none z-[9997] rounded-full border border-blue-400/30"
+          className="fixed top-0 left-0 pointer-events-none z-[9997]"
           style={{ x: r.x, y: r.y, translateX: '-50%', translateY: '-50%' }}
-          initial={{ width: 4, height: 4, opacity: 0.5 }}
-          animate={{ width: 60, height: 60, opacity: 0 }}
-          transition={{ duration: 0.8, ease: 'easeOut' }}
-        />
+        >
+          <motion.div
+            className="absolute inset-0 rounded-full border border-blue-400/30"
+            initial={{ width: 4, height: 4, opacity: 0.6, x: -2, y: -2 }}
+            animate={{ width: 80, height: 80, opacity: 0, x: -40, y: -40 }}
+            transition={{ duration: 0.8, ease: 'easeOut' }}
+          />
+          <motion.div
+            className="absolute inset-0 rounded-full bg-blue-500/10"
+            initial={{ width: 2, height: 2, opacity: 0.4, x: -1, y: -1 }}
+            animate={{ width: 50, height: 50, opacity: 0, x: -25, y: -25 }}
+            transition={{ duration: 0.5, ease: 'easeOut', delay: 0.1 }}
+          />
+        </motion.div>
       ))}
 
       <style jsx global>{`

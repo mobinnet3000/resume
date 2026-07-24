@@ -9,11 +9,12 @@ import { useParallax } from '@/hooks/useParallax'
 
 interface Props {
   project: Project
+  onSelect: (project: Project) => void
 }
 
-export function ProjectCard({ project }: Props) {
+export function ProjectCard({ project, onSelect }: Props) {
   const [hovered, setHovered] = useState(false)
-  const ref = useRef<HTMLDivElement>(null!)
+  const ref = useRef<HTMLButtonElement>(null!)
   const reduce = useReducedMotion()
   const { style: parallaxStyle } = useParallax('cards')
   const mx = useMotionValue(0.5)
@@ -27,14 +28,15 @@ export function ProjectCard({ project }: Props) {
   }
 
   return (
-    <motion.div
+    <motion.button
       ref={ref}
+      onClick={() => onSelect(project)}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => { setHovered(false); mx.set(0.5); my.set(0.5) }}
       onMouseMove={handleMove}
-      className="group relative flex-1 min-w-[220px] max-w-[300px] rounded-2xl
+      className="group relative flex-1 min-w-[220px] max-w-[300px] rounded-2xl text-left
                  border border-white/[0.06] bg-white/[0.02]
-                 cursor-default focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--theme-primary)]"
+                 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--theme-primary)]"
       style={parallaxStyle}
       animate={{
         y: hovered ? -12 : 0,
@@ -134,6 +136,6 @@ export function ProjectCard({ project }: Props) {
         transition={{ duration: 0.4 }}
         style={{ originX: 0.5 }}
       />
-    </motion.div>
+    </motion.button>
   )
 }

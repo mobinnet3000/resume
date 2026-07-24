@@ -22,7 +22,6 @@ function CameraController({ shaking, isIdle }: { shaking: boolean; isIdle: boole
 
   useFrame((_, delta) => {
     const speed = 1 - Math.pow(0.001, delta)
-
     breatheRef.current += delta * 0.3
 
     if (shaking) {
@@ -43,7 +42,6 @@ function CameraController({ shaking, isIdle }: { shaking: boolean; isIdle: boole
       const breatheOffset = isIdle ? 0.015 : 0
       const idleYaw = Math.sin(breatheRef.current) * breatheOffset
       const idlePitch = Math.cos(breatheRef.current * 0.7) * breatheOffset * 0.5
-
       target.current.yaw = (mouse.nx - 0.5) * 0.05 + shakeRef.current.x + idleYaw
       target.current.pitch = (mouse.ny - 0.5) * -0.03 + shakeRef.current.y + idlePitch
       target.current.roll = (mouse.nx - 0.5) * -0.01
@@ -62,6 +60,31 @@ function CameraController({ shaking, isIdle }: { shaking: boolean; isIdle: boole
   })
 
   return null
+}
+
+function SceneLighting() {
+  const lightRef = useRef<THREE.DirectionalLight>(null!)
+  const ambientRef = useRef<THREE.AmbientLight>(null!)
+
+  useFrame(({ clock }) => {
+    const t = clock.elapsedTime
+    if (lightRef.current) {
+      lightRef.current.position.x = Math.sin(t * 0.2) * 5
+      lightRef.current.position.z = Math.cos(t * 0.15) * 5
+    }
+    if (ambientRef.current) {
+      ambientRef.current.intensity = 0.3 + Math.sin(t * 0.1) * 0.05
+    }
+  })
+
+  return (
+    <>
+      <ambientLight ref={ambientRef} intensity={0.3} color="#3b82f6" />
+      <directionalLight ref={lightRef} position={[5, 5, 5]} intensity={0.5} color="#8b5cf6" />
+      <directionalLight position={[-5, -3, -5]} intensity={0.2} color="#06b6d4" />
+      <pointLight position={[0, 0, 0]} intensity={0.1} color="#3b82f6" distance={10} />
+    </>
+  )
 }
 
 export function Scene() {
@@ -119,6 +142,7 @@ export function Scene() {
       >
         <fog attach="fog" args={['#040404', 12, 30]} />
         <CameraController shaking={shaking} isIdle={isIdle} />
+        <SceneLighting />
         <StarField />
         <ParticleField
           mouse={new THREE.Vector2(mouse.x, mouse.y)}
@@ -129,11 +153,11 @@ export function Scene() {
 
         {!reduce && (
           <EffectComposer multisampling={0}>
-            <Bloom luminanceThreshold={0.3} luminanceSmoothing={0.9} intensity={0.4} mipmapBlur />
-            <ChromaticAberration offset={new THREE.Vector2(0.001, 0.001)} radialModulation={false} />
-            <DepthOfField focusDistance={0} focalLength={0.02} bokehScale={0.5} />
-            <Vignette eskil={false} offset={0.3} darkness={0.5} />
-            <Noise opacity={0.015} />
+            <Bloom luminanceThreshold={0.2} luminanceSmoothing={0.7} intensity={0.5} mipmapBlur />
+            <ChromaticAberration offset={new THREE.Vector2(0.0008, 0.0008)} radialModulation={false} modulationSpeed={0.5} />
+            <DepthOfField focusDistance={0} focalLength={0.02} bokehScale={0.4} />
+            <Vignette eskil={false} offset={0.25} darkness={0.6} />
+            <Noise opacity={0.012} />
             <ToneMapping mode={THREE.ACESFilmicToneMapping} />
           </EffectComposer>
         )}
