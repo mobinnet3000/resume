@@ -77,11 +77,28 @@ export const TypingPlaceholder = forwardRef<TypingHandle>(function TypingPlaceho
     return () => { if (timerRef.current) clearTimeout(timerRef.current) }
   }, [startLoop])
 
+  const isHovered = useRef(false)
+
   return (
     <a
       href={href}
       target="_blank"
       rel="noopener noreferrer"
+      className="typing-link"
+      onMouseEnter={(e) => {
+        isHovered.current = true
+        e.currentTarget.style.borderColor = 'var(--accent)'
+        e.currentTarget.style.color = 'var(--text-primary)'
+        e.currentTarget.style.boxShadow = '0 0 24px var(--accent-soft)'
+        e.currentTarget.style.backgroundColor = '#1a1a24'
+      }}
+      onMouseLeave={(e) => {
+        isHovered.current = false
+        e.currentTarget.style.borderColor = 'var(--surface-border)'
+        e.currentTarget.style.color = 'var(--text-secondary)'
+        e.currentTarget.style.boxShadow = 'none'
+        e.currentTarget.style.backgroundColor = 'var(--surface)'
+      }}
       style={{
         height: 48,
         padding: '0 16px',
@@ -101,18 +118,7 @@ export const TypingPlaceholder = forwardRef<TypingHandle>(function TypingPlaceho
         display: 'block',
         lineHeight: '48px',
         textDecoration: 'none',
-        transition: 'border-color 0.2s, color 0.2s, box-shadow 0.2s',
-      }}
-      className="typing-link"
-      onMouseEnter={(e) => {
-        e.currentTarget.style.borderColor = 'var(--accent)'
-        e.currentTarget.style.color = 'var(--accent)'
-        e.currentTarget.style.boxShadow = '0 0 20px var(--accent-soft)'
-      }}
-      onMouseLeave={(e) => {
-        e.currentTarget.style.borderColor = 'var(--surface-border)'
-        e.currentTarget.style.color = 'var(--text-secondary)'
-        e.currentTarget.style.boxShadow = 'none'
+        transition: 'border-color 0.2s, color 0.2s, box-shadow 0.2s, background-color 0.2s',
       }}
     >
       {text || '\u00A0'}
