@@ -1,6 +1,7 @@
 'use client'
 
 import { Background } from '@/components/Background/Background'
+import { Cursor } from '@/components/Cursor/Cursor'
 import { Avatar } from '@/components/Avatar/Avatar'
 import { Name } from '@/components/Name/Name'
 import { TypingAnimation } from '@/components/Subtitle/TypingAnimation'
@@ -13,6 +14,7 @@ export default function Home() {
   return (
     <>
       <Background />
+      <Cursor />
 
       <section className="relative z-10 min-h-screen flex items-center justify-center overflow-hidden select-none" style={{ padding: '48px 24px' }}>
         <div className="flex flex-col items-center text-center w-full max-w-[380px]">
