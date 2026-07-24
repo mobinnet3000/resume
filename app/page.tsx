@@ -59,14 +59,10 @@ export default function Home() {
   const [cfg, setCfg] = useState<Config>(DEFAULT)
   const [time, setTime] = useState('')
 
-  useEffect(() => {
-    fetchConfig().then(setCfg)
-  }, [])
+  useEffect(() => { fetchConfig().then(setCfg) }, [])
 
   useEffect(() => {
-    const update = () => {
-      setTime(new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', timeZone: cfg.timezone }))
-    }
+    const update = () => setTime(new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', timeZone: cfg.timezone }))
     update()
     const timer = setInterval(update, 1000)
     return () => clearInterval(timer)
@@ -79,50 +75,39 @@ export default function Home() {
 
       <div className="fixed inset-0 pointer-events-none z-[1]" style={{ background: 'repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.03) 2px, rgba(0,0,0,0.03) 4px)' }} />
 
-      <section className="relative z-10 min-h-screen flex items-center justify-center overflow-hidden select-none" style={{ padding: '32px 24px' }}>
-        <div className="flex flex-col items-center text-center w-full max-w-[400px]">
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 20, fontFamily: 'var(--font-mono)', fontSize: 12, color: 'var(--text-secondary)', letterSpacing: '0.5px', textTransform: 'lowercase' }}>
-            <div style={{ position: 'relative', width: 8, height: 8 }}>
-              <div style={{ width: 8, height: 8, borderRadius: '50%', backgroundColor: 'var(--syntax-string)', boxShadow: '0 0 12px var(--syntax-string)', animation: 'pulse-dot 2s ease-in-out infinite' }} />
-            </div>
+      <section className="relative z-10 min-h-dvh flex items-center justify-center overflow-hidden select-none px-4 py-6 md:px-6 md:py-8">
+        <div className="flex flex-col items-center text-center w-full max-w-[360px] md:max-w-[400px]">
+          <div className="flex items-center gap-1.5 md:gap-2 mb-3 md:mb-5 font-mono text-[10px] md:text-xs tracking-wider" style={{ color: 'var(--text-secondary)', textTransform: 'lowercase' }}>
+            <div className="w-[6px] h-[6px] md:w-[8px] md:h-[8px] rounded-full" style={{ backgroundColor: 'var(--syntax-string)', boxShadow: '0 0 10px var(--syntax-string)', animation: 'pulse-dot 2s ease-in-out infinite' }} />
             <span>{cfg.availableText}</span>
           </div>
 
-          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 16, width: '100%', marginBottom: 32 }}>
+          <div className="flex flex-col items-center gap-2 md:gap-4 w-full mb-5 md:mb-8">
             <Avatar onClick={() => {}} />
             <Name firstNameColor={cfg.firstNameColor} lastNameColor={cfg.lastNameColor} />
             <TypingAnimation texts={cfg.roleTexts} />
           </div>
 
-          <div style={{
-            width: '100%', padding: 24, borderRadius: 16,
+          <div className="w-full p-4 md:p-6 rounded-2xl" style={{
             background: 'linear-gradient(135deg, var(--surface), rgba(18,18,25,0.95))',
             border: '1px solid var(--surface-border)',
-            boxShadow: '0 24px 48px -16px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.03)',
+            boxShadow: '0 24px 48px -16px rgba(0,0,0,0.5)',
             position: 'relative', overflow: 'hidden',
           }}>
-            <div style={{ position: 'absolute', top: '-50%', left: '50%', width: '60%', height: '60%', background: 'radial-gradient(ellipse, var(--accent-soft) 0%, transparent 70%)', transform: 'translateX(-50%)', pointerEvents: 'none' }} />
-            <div style={{ position: 'relative', zIndex: 1 }}>
+            <div className="absolute top-[-50%] left-1/2 w-3/5 h-3/5 -translate-x-1/2 pointer-events-none" style={{ background: 'radial-gradient(ellipse, var(--accent-soft) 0%, transparent 70%)' }} />
+            <div className="relative z-[1]">
               <CodeLines />
-              <div style={{ display: 'flex', gap: 8, marginTop: 16 }}>
+              <div className="flex gap-2 md:gap-3 mt-3 md:mt-4">
                 <TypingPlaceholder ref={typingRef} messages={cfg.messages} />
-                <button
-                  type="button"
-                  onClick={() => typingRef.current?.next()}
-                  aria-label="Next message"
-                  style={{
-                    width: 48, height: 48, borderRadius: 12,
-                    background: 'linear-gradient(135deg, var(--accent), #e67c18)',
-                    color: 'var(--bg)', border: 'none', cursor: 'pointer',
-                    display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
-                    transition: 'all 0.2s', boxShadow: '0 4px 16px rgba(247,139,28,0.3)',
-                  }}
+                <button type="button" onClick={() => typingRef.current?.next()} aria-label="Next message"
+                  className="w-[44px] h-[44px] md:w-[48px] md:h-[48px] rounded-xl flex items-center justify-center shrink-0 transition-all duration-200"
+                  style={{ background: 'linear-gradient(135deg, var(--accent), #e67c18)', color: 'var(--bg)', border: 'none', cursor: 'pointer', boxShadow: '0 4px 16px rgba(247,139,28,0.3)' }}
                   onMouseEnter={(e) => { e.currentTarget.style.boxShadow = '0 0 30px var(--accent)'; e.currentTarget.style.transform = 'scale(1.1)' }}
                   onMouseLeave={(e) => { e.currentTarget.style.boxShadow = '0 4px 16px rgba(247,139,28,0.3)'; e.currentTarget.style.transform = 'scale(1)' }}
                   onMouseDown={(e) => { e.currentTarget.style.transform = 'scale(0.92)' }}
                   onMouseUp={(e) => { e.currentTarget.style.transform = 'scale(1.1)' }}
                 >
-                  <FiTerminal className="w-5 h-5" />
+                  <FiTerminal className="w-[18px] h-[18px] md:w-5 md:h-5" />
                 </button>
               </div>
             </div>
@@ -130,9 +115,9 @@ export default function Home() {
 
           <SocialButtons links={cfg.socialLinks} />
 
-          <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginTop: 24, fontSize: 11, fontFamily: 'var(--font-mono)', color: 'var(--text-muted)' }}>
+          <div className="flex items-center gap-2 md:gap-3 mt-4 md:mt-6 text-[10px] md:text-xs font-mono" style={{ color: 'var(--text-muted)' }}>
             <span>{cfg.location}</span>
-            <span style={{ width: 3, height: 3, borderRadius: '50%', backgroundColor: 'var(--surface-border)' }} />
+            <span className="w-[2px] h-[2px] md:w-[3px] md:h-[3px] rounded-full" style={{ backgroundColor: 'var(--surface-border)' }} />
             <span>{time} {cfg.timezone.split('/').pop()}</span>
           </div>
         </div>
