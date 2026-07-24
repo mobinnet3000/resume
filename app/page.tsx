@@ -25,9 +25,19 @@ export default function Home() {
             className="flex items-center gap-2 mb-4 text-xs tracking-wider"
             style={{ fontFamily: 'var(--font-mono)', color: 'var(--text-secondary)', textTransform: 'lowercase' }}
           >
-            <span className="w-[6px] h-[6px] rounded-full" style={{ backgroundColor: 'var(--syntax-string)', boxShadow: '0 0 10px 1px var(--syntax-string)' }} />
+            <span
+              className="w-[6px] h-[6px] rounded-full"
+              style={{
+                backgroundColor: 'var(--syntax-string)',
+                boxShadow: '0 0 10px 1px var(--syntax-string)',
+                animation: 'dot-blink 2s ease-in-out infinite',
+              }}
+            />
             available
           </p>
+          <style>{`
+            @keyframes dot-blink { 0%,100% { opacity: 1; } 50% { opacity: 0.3; } }
+          `}</style>
 
           <div className="flex flex-col items-center gap-4 w-full mb-8">
             <Avatar onClick={() => {}} />
