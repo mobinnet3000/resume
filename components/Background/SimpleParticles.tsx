@@ -8,8 +8,8 @@ interface Ball {
   radius: number; color: string
 }
 
-const COLORS = ['#f78b1c', '#f4ce23', '#ffffff']
-const COUNT = 30
+const COLORS = ['#f78b1c', '#f4ce23', '#ffffff', '#ff9f43', '#ffd43b']
+const COUNT = 55
 
 export function SimpleParticles() {
   const canvasRef = useRef<HTMLCanvasElement>(null!)
@@ -30,7 +30,7 @@ export function SimpleParticles() {
       y: Math.random() * canvas.height,
       vx: (Math.random() - 0.5) * 0.3,
       vy: (Math.random() - 0.5) * 0.3,
-      radius: 2 + Math.random() * 3,
+      radius: 2 + Math.random() * 4,
       color: COLORS[Math.floor(Math.random() * COLORS.length)],
     }))
 
@@ -44,10 +44,10 @@ export function SimpleParticles() {
         const dy = mouse.y - b.y
         const dist = Math.sqrt(dx * dx + dy * dy)
 
-        if (dist < 180 && dist > 0) {
-          const str = (1 - dist / 180) * 0.06
-          b.vx += (-dy / dist * str * 1.2 + dx / dist * str * 0.5)
-          b.vy += (dx / dist * str * 1.2 + dy / dist * str * 0.5)
+        if (dist < 220 && dist > 0) {
+          const str = (1 - dist / 220) * 0.07
+          b.vx += (-dy / dist * str * 1.3 + dx / dist * str * 0.5)
+          b.vy += (dx / dist * str * 1.3 + dy / dist * str * 0.5)
         }
 
         b.x += b.vx
@@ -60,16 +60,20 @@ export function SimpleParticles() {
         if (b.y < -20) b.y = canvas.height + 20
         if (b.y > canvas.height + 20) b.y = -20
 
-        const scale = dist < 180 ? 1 + (1 - dist / 180) * 2 : 1
-        const alpha = dist < 180 ? 0.5 + (1 - dist / 180) * 0.4 : 0.5
+        const near = dist < 220
+        const scale = near ? 1 + (1 - dist / 220) * 2.5 : 1
+        const alpha = near ? 0.6 + (1 - dist / 220) * 0.4 : 0.6
+        const blur = near ? 12 + (1 - dist / 220) * 15 : 6
 
+        ctx.save()
         ctx.globalAlpha = alpha
         ctx.fillStyle = b.color
         ctx.shadowColor = b.color
-        ctx.shadowBlur = 8
+        ctx.shadowBlur = blur
         ctx.beginPath()
         ctx.arc(b.x, b.y, b.radius * scale, 0, Math.PI * 2)
         ctx.fill()
+        ctx.restore()
       }
 
       animId = requestAnimationFrame(animate)
