@@ -3,20 +3,32 @@
 import { useRef, useState } from 'react'
 import { motion, useMotionValue, useSpring } from 'framer-motion'
 import { FiGithub, FiLinkedin, FiSend, FiInstagram, FiMail, FiFileText } from 'react-icons/fi'
-import { SOCIAL_LINKS } from '@/constants'
 import { staggerContainer } from '@/animations/variants'
 import { useReducedMotion } from '@/hooks/useReducedMotion'
 
 const iconMap: Record<string, React.ComponentType<{ className?: string; style?: React.CSSProperties }>> = {
-  FaGithub: FiGithub,
-  FaLinkedin: FiLinkedin,
-  FaTelegram: FiSend,
-  FaInstagram: FiInstagram,
-  FaEnvelope: FiMail,
-  FaFileAlt: FiFileText,
+  GitHub: FiGithub,
+  LinkedIn: FiLinkedin,
+  Telegram: FiSend,
+  Instagram: FiInstagram,
+  Email: FiMail,
+  Resume: FiFileText,
 }
 
-function SocialIcon({ link }: { link: typeof SOCIAL_LINKS[0] }) {
+interface Props {
+  links?: { name: string; url: string }[]
+}
+
+const DEFAULT_LINKS = [
+  { name: 'GitHub', url: '#' },
+  { name: 'LinkedIn', url: '#' },
+  { name: 'Telegram', url: '#' },
+  { name: 'Instagram', url: '#' },
+  { name: 'Email', url: '#' },
+  { name: 'Resume', url: '#' },
+]
+
+function SocialIcon({ name, url }: { name: string; url: string }) {
   const ref = useRef<HTMLAnchorElement>(null!)
   const reduce = useReducedMotion()
   const mx = useMotionValue(0)
@@ -28,61 +40,46 @@ function SocialIcon({ link }: { link: typeof SOCIAL_LINKS[0] }) {
   const handleMouse = (e: React.MouseEvent) => {
     if (!ref.current || reduce) return
     const rect = ref.current.getBoundingClientRect()
-    const cx = rect.left + rect.width / 2
-    const cy = rect.top + rect.height / 2
-    mx.set((e.clientX - cx) * 0.3)
-    my.set((e.clientY - cy) * 0.3)
+    mx.set((e.clientX - rect.left - rect.width / 2) * 0.3)
+    my.set((e.clientY - rect.top - rect.height / 2) * 0.3)
   }
 
   const handleLeave = () => { mx.set(0); my.set(0); setHovered(false) }
 
-  const Icon = iconMap[link.icon] || FiGithub
+  const Icon = iconMap[name] || FiGithub
 
   return (
     <motion.a
       ref={ref}
-      href={link.url}
+      href={url}
       target="_blank"
       rel="noopener noreferrer"
-      aria-label={link.label}
+      aria-label={name}
       onMouseMove={handleMouse}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={handleLeave}
       className="flex items-center justify-center rounded-xl transition-colors duration-200"
       style={{
-        width: 48,
-        height: 48,
+        width: 48, height: 48,
         backgroundColor: hovered ? 'var(--accent-soft)' : 'var(--surface)',
         border: '1px solid',
         borderColor: hovered ? 'var(--accent-yellow)' : 'var(--surface-border)',
-        x: springX,
-        y: springY,
+        x: springX, y: springY,
       }}
-      variants={{
-        hidden: { opacity: 0, y: 20 },
-        visible: { opacity: 1, y: 0 },
-      }}
+      variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }}
       whileHover={{ scale: 1.08 }}
       whileTap={{ scale: 0.95 }}
     >
-      <Icon
-        className="w-5 h-5 transition-colors duration-200"
-        style={{ color: hovered ? 'var(--accent-yellow)' : 'var(--text-secondary)' }}
-      />
+      <Icon className="w-5 h-5 transition-colors duration-200" style={{ color: hovered ? 'var(--accent-yellow)' : 'var(--text-secondary)' }} />
     </motion.a>
   )
 }
 
-export function SocialButtons() {
+export function SocialButtons({ links = DEFAULT_LINKS }: Props) {
   return (
-    <motion.div
-      className="flex items-center gap-4 mt-8 justify-center"
-      variants={staggerContainer}
-      initial="hidden"
-      animate="visible"
-    >
-      {SOCIAL_LINKS.map((link) => (
-        <SocialIcon key={link.name} link={link} />
+    <motion.div className="flex items-center gap-4 mt-8 justify-center" variants={staggerContainer} initial="hidden" animate="visible">
+      {links.map((link) => (
+        <SocialIcon key={link.name} name={link.name} url={link.url} />
       ))}
     </motion.div>
   )

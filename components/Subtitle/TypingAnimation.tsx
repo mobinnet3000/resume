@@ -2,15 +2,20 @@
 
 import { useState, useEffect, useCallback } from 'react'
 import { motion } from 'framer-motion'
-import { TITLES } from '@/constants'
 
-export function TypingAnimation() {
+interface Props {
+  texts?: string[]
+}
+
+const DEFAULT_TEXTS = ['Full Stack Developer', 'Flutter Developer', 'AI Engineer', 'Backend Developer', 'Open Source Enthusiast']
+
+export function TypingAnimation({ texts = DEFAULT_TEXTS }: Props) {
   const [index, setIndex] = useState(0)
   const [charIndex, setCharIndex] = useState(0)
   const [deleting, setDeleting] = useState(false)
   const [visible, setVisible] = useState(true)
 
-  const current = TITLES[index]
+  const current = texts[index]
 
   const tick = useCallback(() => {
     if (!deleting) {
@@ -24,10 +29,10 @@ export function TypingAnimation() {
         setCharIndex((p) => p - 1)
       } else {
         setDeleting(false)
-        setIndex((p) => (p + 1) % TITLES.length)
+        setIndex((p) => (p + 1) % texts.length)
       }
     }
-  }, [charIndex, deleting, current])
+  }, [charIndex, deleting, current, texts.length])
 
   useEffect(() => {
     const speed = deleting ? 30 : 60
