@@ -1,6 +1,6 @@
 'use client'
 
-import { useRef, useState, useEffect } from 'react'
+import { useRef, useState, useEffect, useCallback } from 'react'
 import { Background } from '@/components/Background/Background'
 import { Cursor } from '@/components/Cursor/Cursor'
 import { Avatar } from '@/components/Avatar/Avatar'
@@ -18,6 +18,20 @@ function HomePage() {
   const [adminOpen, setAdminOpen] = useState(false)
   const [time, setTime] = useState('')
   const { data } = useAdminData()
+  const clickCountRef = useRef(0)
+  const clickTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+
+  const handleDotClick = useCallback(() => {
+    clickCountRef.current++
+    if (clickCountRef.current >= 3) {
+      clickCountRef.current = 0
+      if (clickTimerRef.current) clearTimeout(clickTimerRef.current)
+      setAdminOpen((p) => !p)
+    } else {
+      if (clickTimerRef.current) clearTimeout(clickTimerRef.current)
+      clickTimerRef.current = setTimeout(() => { clickCountRef.current = 0 }, 1000)
+    }
+  }, [])
 
   useEffect(() => {
     const update = () => {
@@ -42,7 +56,7 @@ function HomePage() {
         <div className="flex flex-col items-center text-center w-full max-w-[400px]">
           <div
             style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 20, fontFamily: 'var(--font-mono)', fontSize: 12, color: 'var(--text-secondary)', letterSpacing: '0.5px', textTransform: 'lowercase', cursor: 'pointer' }}
-            onClick={() => setAdminOpen((p) => !p)}
+            onClick={handleDotClick}
           >
             <div style={{ position: 'relative', width: 8, height: 8 }}>
               <div style={{ width: 8, height: 8, borderRadius: '50%', backgroundColor: 'var(--syntax-string)', boxShadow: '0 0 12px var(--syntax-string)', animation: 'pulse-dot 2s ease-in-out infinite' }} />
