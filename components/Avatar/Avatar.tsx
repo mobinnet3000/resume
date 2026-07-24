@@ -34,7 +34,7 @@ export function Avatar({ onClick }: { onClick: () => void }) {
       onMouseMove={handleMouse}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={handleLeave}
-      className="relative w-[120px] h-[120px] rounded-full cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)]"
+      className="relative w-[160px] h-[160px] rounded-full cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)]"
       style={{ x: springX, y: springY }}
       initial={{ opacity: 0, scale: 0.6, rotate: -12 }}
       animate={{ opacity: 1, scale: 1, rotate: 0 }}
@@ -42,14 +42,22 @@ export function Avatar({ onClick }: { onClick: () => void }) {
       aria-label="About Me"
     >
       <div className="w-full h-full rounded-full bg-[var(--surface)] flex items-center justify-center overflow-hidden border-2 border-transparent relative">
-        <Image src="/avatar.png" alt="Mobin Bastai" width={120} height={120} priority className="w-full h-full object-cover" />
+        <Image src="/avatar.png" alt="Mobin Bastai" width={160} height={160} priority className="w-full h-full object-cover" />
       </div>
+      {/* Permanent subtle glow ring */}
       <motion.div
-        className="absolute -inset-[3px] rounded-full pointer-events-none"
-        initial={{ opacity: 0, scale: 0.8 }}
-        animate={hovered ? { opacity: 1, scale: 1.15 } : { opacity: 0 }}
+        className="absolute -inset-1 rounded-full pointer-events-none -z-10"
+        animate={{ opacity: [0.15, 0.3, 0.15] }}
+        transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
+        style={{ boxShadow: '0 0 40px var(--accent)', border: '1px solid var(--accent)' }}
+      />
+      {/* Hover accent ring */}
+      <motion.div
+        className="absolute -inset-[4px] rounded-full pointer-events-none"
+        initial={{ opacity: 0, scale: 0.85 }}
+        animate={hovered ? { opacity: 1, scale: 1.05 } : { opacity: 0, scale: 0.85 }}
         transition={{ duration: 0.3 }}
-        style={{ border: '2px solid var(--accent)' }}
+        style={{ border: '2px solid var(--accent-yellow)' }}
       />
     </motion.button>
   )
