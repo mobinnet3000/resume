@@ -3,7 +3,6 @@
 import { useState, useCallback, useEffect } from 'react'
 
 const STORAGE_KEY = 'resume-admin'
-
 const CREDENTIALS = { username: 'admin', password: 'mobin1379' }
 
 export interface AdminData {
@@ -18,7 +17,7 @@ export interface AdminData {
   messages: { text: string; href: string }[]
 }
 
-const DEFAULT_DATA: AdminData = {
+export const DEFAULT_DATA: AdminData = {
   name: 'Mobin Bastai',
   firstNameColor: '#f78b1c',
   lastNameColor: '#f4ce23',
@@ -45,7 +44,20 @@ export function checkAuth(user: string, pass: string): boolean {
   return user === CREDENTIALS.username && pass === CREDENTIALS.password
 }
 
-export function loadData(): AdminData {
+let cachedRemote: AdminData | null = null
+
+async function fetchRemoteConfig(): Promise<AdminData | null> {
+  if (cachedRemote) return cachedRemote
+  try {
+    const res = await fetch('/config.json?' + Date.now())
+    if (!res.ok) return null
+    const data = await res.json()
+    cachedRemote = data
+    return data
+  } catch { return null }
+}
+
+export function loadData(remote: AdminData | null): AdminData {
   if (typeof window === 'undefined') return DEFAULT_DATA
   try {
     const raw = localStorage.getItem(STORAGE_KEY)
@@ -54,13 +66,15 @@ export function loadData(): AdminData {
       return { ...DEFAULT_DATA, ...parsed, socialLinks: parsed.socialLinks || DEFAULT_DATA.socialLinks, messages: parsed.messages || DEFAULT_DATA.messages, roleTexts: parsed.roleTexts || DEFAULT_DATA.roleTexts }
     }
   } catch {}
-  return DEFAULT_DATA
+  return remote || DEFAULT_DATA
 }
 
 export function saveData(data: AdminData) {
-  try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(data))
-  } catch {}
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(data)) } catch {}
+}
+
+export function getConfigCode(data: AdminData): string {
+  return JSON.stringify(data, null, 2)
 }
 
 export function useAdmin() {
@@ -68,25 +82,21 @@ export function useAdmin() {
   const [loaded, setLoaded] = useState(false)
 
   useEffect(() => {
-    setData(loadData())
-    setLoaded(true)
+    fetchRemoteConfig().then((remote) => {
+      setData(loadData(remote))
+      setLoaded(true)
+    })
   }, [])
 
   const update = useCallback((patch: Partial<AdminData>) => {
-    setData((prev) => {
-      const next = { ...prev, ...patch }
-      saveData(next)
-      return next
-    })
+    setData((prev) => { const next = { ...prev, ...patch }; saveData(next); return next })
   }, [])
 
   const updateSocialLink = useCallback((index: number, url: string) => {
     setData((prev) => {
       const links = [...prev.socialLinks]
       if (links[index]) links[index] = { ...links[index], url }
-      const next = { ...prev, socialLinks: links }
-      saveData(next)
-      return next
+      const next = { ...prev, socialLinks: links }; saveData(next); return next
     })
   }, [])
 
@@ -94,9 +104,7 @@ export function useAdmin() {
     setData((prev) => {
       const msgs = [...prev.messages]
       if (msgs[index]) msgs[index] = { text, href }
-      const next = { ...prev, messages: msgs }
-      saveData(next)
-      return next
+      const next = { ...prev, messages: msgs }; saveData(next); return next
     })
   }, [])
 
@@ -104,28 +112,23 @@ export function useAdmin() {
     setData((prev) => {
       const roles = [...prev.roleTexts]
       if (roles[index]) roles[index] = text
-      const next = { ...prev, roleTexts: roles }
-      saveData(next)
-      return next
+      const next = { ...prev, roleTexts: roles }; saveData(next); return next
     })
   }, [])
 
   const addMessage = useCallback(() => {
     setData((prev) => {
       const next = { ...prev, messages: [...prev.messages, { text: 'New Project', href: '#' }] }
-      saveData(next)
-      return next
+      saveData(next); return next
     })
   }, [])
 
   const removeMessage = useCallback((index: number) => {
     setData((prev) => {
       const msgs = prev.messages.filter((_, i) => i !== index)
-      const next = { ...prev, messages: msgs }
-      saveData(next)
-      return next
+      const next = { ...prev, messages: msgs }; saveData(next); return next
     })
   }, [])
 
-  return { data, loaded, update, updateSocialLink, updateMessage, updateRoleText, addMessage, removeMessage }
+  return { data, loaded, update, updateSocialLink, updateMessage, updateRoleText, addMessage, removeMessage, getConfigCode }
 }

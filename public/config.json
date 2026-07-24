@@ -1,0 +1,28 @@
+{
+  "name": "Mobin Bastai",
+  "firstNameColor": "#f78b1c",
+  "lastNameColor": "#f4ce23",
+  "availableText": "available for freelance",
+  "roleTexts": [
+    "Full Stack Developer",
+    "Flutter Developer",
+    "AI Engineer",
+    "Backend Developer",
+    "Open Source Enthusiast"
+  ],
+  "location": "Tehran, Iran",
+  "timezone": "Asia/Tehran",
+  "socialLinks": [
+    { "name": "GitHub", "url": "#" },
+    { "name": "LinkedIn", "url": "#" },
+    { "name": "Telegram", "url": "#" },
+    { "name": "Instagram", "url": "#" },
+    { "name": "Email", "url": "#" },
+    { "name": "Resume", "url": "#" }
+  ],
+  "messages": [
+    { "text": "AI Platform — Real-time inference engine", "href": "#" },
+    { "text": "FlutterFlow — Cross-platform app builder", "href": "#" },
+    { "text": "DevOps Dashboard — Infra monitoring", "href": "#" }
+  ]
+}
