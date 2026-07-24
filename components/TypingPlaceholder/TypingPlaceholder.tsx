@@ -36,7 +36,6 @@ export const TypingPlaceholder = forwardRef<TypingHandle>(function TypingPlaceho
   const tick = useCallback(() => {
     const st = stateRef.current
     if (st.paused) return
-
     const msg = MESSAGES[st.msgIdx % MESSAGES.length]
 
     if (st.isDeleting) {
@@ -67,14 +66,10 @@ export const TypingPlaceholder = forwardRef<TypingHandle>(function TypingPlaceho
       st.msgIdx = (st.msgIdx + 1) % MESSAGES.length
       st.charIdx = MESSAGES[st.msgIdx].text.length
       st.isDeleting = true
-      st.paused = true
+      st.paused = false
       updateDisplay(st.msgIdx, st.charIdx)
       stopTimer()
-      // Resume after a pause
-      timerRef.current = setTimeout(() => {
-        stateRef.current.paused = false
-        tick()
-      }, 3000)
+      timerRef.current = setTimeout(() => { stateRef.current.paused = false; tick() }, 2500)
     },
   }), [tick, updateDisplay, stopTimer])
 
@@ -89,38 +84,26 @@ export const TypingPlaceholder = forwardRef<TypingHandle>(function TypingPlaceho
       href={href}
       target="_blank"
       rel="noopener noreferrer"
-      className="typing-link"
       onMouseEnter={(e) => {
+        stateRef.current.paused = true
         e.currentTarget.style.borderColor = 'var(--accent)'
         e.currentTarget.style.color = 'var(--text-primary)'
         e.currentTarget.style.boxShadow = '0 0 24px var(--accent-soft)'
         e.currentTarget.style.backgroundColor = '#1a1a24'
       }}
       onMouseLeave={(e) => {
+        stateRef.current.paused = false
+        tick()
         e.currentTarget.style.borderColor = 'var(--surface-border)'
         e.currentTarget.style.color = 'var(--text-secondary)'
         e.currentTarget.style.boxShadow = 'none'
         e.currentTarget.style.backgroundColor = 'var(--surface)'
       }}
       style={{
-        height: 48,
-        padding: '0 16px',
-        fontFamily: 'var(--font-mono)',
-        fontSize: 14,
-        color: 'var(--text-secondary)',
-        backgroundColor: 'var(--surface)',
-        border: '1px solid var(--surface-border)',
-        borderRadius: 10,
-        textAlign: 'left',
-        whiteSpace: 'nowrap',
-        textOverflow: 'ellipsis',
-        overflow: 'hidden',
-        cursor: 'pointer',
-        outline: 'none',
-        flex: 1,
-        display: 'block',
-        lineHeight: '48px',
-        textDecoration: 'none',
+        height: 48, padding: '0 16px', fontFamily: 'var(--font-mono)', fontSize: 14,
+        color: 'var(--text-secondary)', backgroundColor: 'var(--surface)', border: '1px solid var(--surface-border)',
+        borderRadius: 10, textAlign: 'left', whiteSpace: 'nowrap', textOverflow: 'ellipsis', overflow: 'hidden',
+        cursor: 'pointer', outline: 'none', flex: 1, display: 'block', lineHeight: '48px', textDecoration: 'none',
         transition: 'border-color 0.2s, color 0.2s, box-shadow 0.2s, background-color 0.2s',
       }}
     >
