@@ -33,46 +33,22 @@ export function Avatar({ onClick }: { onClick: () => void }) {
       onMouseMove={handleMouse}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={handleLeave}
-      className="relative w-28 h-28 rounded-full cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400"
+      className="relative w-[100px] h-[100px] rounded-full cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)]"
       style={{ x: springX, y: springY }}
-      initial={{ opacity: 0, scale: 0.5 }}
-      animate={{ opacity: 1, scale: 1 }}
-      transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+      initial={{ opacity: 0, scale: 0.6, rotate: -12 }}
+      animate={{ opacity: 1, scale: 1, rotate: 0 }}
+      transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
       aria-label="About Me"
     >
-      <div
-        className="absolute inset-0 rounded-full"
-        style={{
-          background: 'linear-gradient(135deg, var(--theme-primary, #3b82f6), var(--theme-secondary, #8b5cf6))',
-          padding: 2,
-        }}
-      >
-        <div className="w-full h-full rounded-full bg-[#090909] flex items-center justify-center overflow-hidden">
-          <span className="text-4xl select-none">😀</span>
-        </div>
+      <div className="w-full h-full rounded-full bg-[var(--surface)] flex items-center justify-center overflow-hidden border-2 border-transparent relative">
+        <span className="text-4xl select-none">😀</span>
       </div>
-
       <motion.div
-        className="absolute inset-0 rounded-full -z-10"
-        animate={{
-          boxShadow: hovered
-            ? '0 0 40px var(--theme-glow, rgba(59,130,246,0.3)), 0 0 80px var(--theme-glow, rgba(139,92,246,0.15))'
-            : '0 0 20px var(--theme-glow, rgba(59,130,246,0.1))',
-        }}
-        transition={{ duration: 0.4 }}
-      />
-
-      <motion.div
-        className="absolute -inset-1 rounded-full -z-10 opacity-50"
-        animate={{
-          background: hovered
-            ? 'conic-gradient(from var(--angle), var(--theme-primary, #3b82f6), var(--theme-secondary, #8b5cf6), var(--theme-tertiary, #06b6d4), var(--theme-primary, #3b82f6))'
-            : 'conic-gradient(from var(--angle), transparent, transparent)',
-        }}
-        style={{
-          background: 'conic-gradient(from var(--angle), var(--theme-primary, #3b82f6), var(--theme-secondary, #8b5cf6), var(--theme-tertiary, #06b6d4), var(--theme-primary, #3b82f6))',
-        }}
-        transition={{ duration: 3, repeat: Infinity, ease: 'linear' }}
+        className="absolute -inset-[3px] rounded-full pointer-events-none"
+        initial={{ opacity: 0, scale: 0.8 }}
+        animate={hovered ? { opacity: 1, scale: 1.15 } : { opacity: 0 }}
+        transition={{ duration: 0.3 }}
+        style={{ border: '2px solid var(--accent)' }}
       />
     </motion.button>
   )

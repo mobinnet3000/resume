@@ -24,22 +24,24 @@ export function StatusBar() {
 
   return (
     <motion.div
-      className="flex items-center gap-4 mt-8 text-xs text-gray-600"
+      className="flex items-center gap-4 mt-8 text-xs"
+      style={{ color: 'var(--text-muted)' }}
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.8, delay: 2 }}
     >
       <span className="flex items-center gap-1.5">
         <motion.span
-          className="w-1.5 h-1.5 rounded-full bg-green-500"
+          className="w-[6px] h-[6px] rounded-full"
+          style={{ backgroundColor: 'var(--syntax-string)' }}
           animate={{ opacity: [1, 0.3, 1] }}
           transition={{ duration: 2, repeat: Infinity }}
         />
-        Available for Freelance
+        Available
       </span>
-      <span className="w-1 h-1 rounded-full bg-white/[0.1]" />
+      <span className="w-1 h-1 rounded-full" style={{ backgroundColor: 'var(--surface-border)' }} />
       <span>{SITE_CONFIG.location}</span>
-      <span className="w-1 h-1 rounded-full bg-white/[0.1]" />
+      <span className="w-1 h-1 rounded-full" style={{ backgroundColor: 'var(--surface-border)' }} />
       <span>{time} IRST</span>
     </motion.div>
   )

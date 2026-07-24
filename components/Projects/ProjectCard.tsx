@@ -34,14 +34,16 @@ export function ProjectCard({ project, onSelect }: Props) {
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => { setHovered(false); mx.set(0.5); my.set(0.5) }}
       onMouseMove={handleMove}
-      className="group relative flex-1 min-w-[220px] max-w-[300px] rounded-2xl text-left
-                 border border-white/[0.06] bg-white/[0.02]
-                 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--theme-primary)]"
-      style={parallaxStyle}
+      className="group relative flex-1 min-w-[220px] max-w-[300px] rounded-2xl text-left cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)]"
+      style={{
+        backgroundColor: 'var(--surface)',
+        border: '1px solid var(--surface-border)',
+        ...parallaxStyle,
+      }}
       animate={{
-        y: hovered ? -12 : 0,
-        scale: hovered ? 1.03 : 1,
-        borderColor: hovered ? 'var(--theme-primary)' : 'rgba(255,255,255,0.06)',
+        y: hovered ? -8 : 0,
+        scale: hovered ? 1.02 : 1,
+        borderColor: hovered ? 'var(--accent)' : 'var(--surface-border)',
       }}
       transition={{ type: 'spring', stiffness: 200, damping: 20 }}
     >
@@ -49,7 +51,7 @@ export function ProjectCard({ project, onSelect }: Props) {
         className="absolute inset-0 rounded-2xl -z-10"
         style={{
           background: hovered
-            ? `radial-gradient(150% 100% at ${mx.get() * 100}% ${my.get() * 100}%, var(--theme-glow, rgba(59,130,246,0.1)) 0%, transparent 100%)`
+            ? `radial-gradient(150% 100% at ${mx.get() * 100}% ${my.get() * 100}%, var(--accent-soft) 0%, transparent 100%)`
             : 'transparent',
         }}
       />
@@ -57,15 +59,18 @@ export function ProjectCard({ project, onSelect }: Props) {
       <div className="p-5">
         <div className="flex items-center justify-between mb-3">
           <div className="flex items-center gap-2">
-            <FiFolder className="w-4 h-4 text-[var(--theme-primary)]/60" />
-            <h3 className="text-sm font-semibold text-white tracking-wide">{project.name}</h3>
+            <FiFolder className="w-4 h-4" style={{ color: 'var(--accent)' }} />
+            <h3 className="text-sm font-semibold tracking-wide" style={{ color: 'var(--text-primary)' }}>
+              {project.name}
+            </h3>
           </div>
         </div>
 
         <AnimatePresence>
           {hovered && (
             <motion.p
-              className="text-xs text-gray-400 leading-relaxed mb-3"
+              className="text-xs leading-relaxed mb-3"
+              style={{ color: 'var(--text-secondary)' }}
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: 'auto' }}
               exit={{ opacity: 0, height: 0 }}
@@ -84,10 +89,12 @@ export function ProjectCard({ project, onSelect }: Props) {
           {project.tech.map((t) => (
             <span
               key={t}
-              className="px-2 py-0.5 text-[10px] rounded-md
-                         bg-white/[0.04] text-gray-500 border border-white/[0.06]
-                         group-hover:border-[var(--theme-primary)]/20 group-hover:text-[var(--theme-primary)]/70
-                         transition-colors duration-300"
+              className="px-2 py-0.5 text-[10px] rounded-md"
+              style={{
+                backgroundColor: 'rgba(255,255,255,0.04)',
+                color: 'var(--text-muted)',
+                border: '1px solid var(--surface-border)',
+              }}
             >
               {t}
             </span>
@@ -104,10 +111,12 @@ export function ProjectCard({ project, onSelect }: Props) {
             href={project.url}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[11px] font-medium
-                       bg-white/[0.04] text-gray-400 border border-white/[0.06]
-                       hover:bg-[var(--theme-primary)]/10 hover:text-[var(--theme-primary)] hover:border-[var(--theme-primary)]/30
-                       transition-all duration-200"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[11px] font-medium transition-all duration-200"
+            style={{
+              backgroundColor: 'rgba(255,255,255,0.04)',
+              color: 'var(--text-secondary)',
+              border: '1px solid var(--surface-border)',
+            }}
             onClick={(e) => e.stopPropagation()}
           >
             <FiExternalLink className="w-3 h-3" />
@@ -117,10 +126,12 @@ export function ProjectCard({ project, onSelect }: Props) {
             href={project.url}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[11px] font-medium
-                       bg-white/[0.04] text-gray-400 border border-white/[0.06]
-                       hover:bg-white/[0.08] hover:text-white hover:border-white/[0.15]
-                       transition-all duration-200"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[11px] font-medium transition-all duration-200"
+            style={{
+              backgroundColor: 'rgba(255,255,255,0.04)',
+              color: 'var(--text-secondary)',
+              border: '1px solid var(--surface-border)',
+            }}
             onClick={(e) => e.stopPropagation()}
           >
             <FiGithub className="w-3 h-3" />
@@ -128,14 +139,6 @@ export function ProjectCard({ project, onSelect }: Props) {
           </a>
         </motion.div>
       </div>
-
-      <motion.div
-        className="absolute bottom-0 left-4 right-4 h-[1px] bg-gradient-to-r from-transparent via-[var(--theme-primary)]/40 to-transparent"
-        initial={{ scaleX: 0, opacity: 0 }}
-        animate={hovered ? { scaleX: 1, opacity: 1 } : {}}
-        transition={{ duration: 0.4 }}
-        style={{ originX: 0.5 }}
-      />
     </motion.button>
   )
 }

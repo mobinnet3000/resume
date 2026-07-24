@@ -19,17 +19,19 @@ export function SkillTags() {
       {tags.map(({ skill, delay }) => (
         <motion.span
           key={skill}
-          className="px-3 py-1 text-[11px] rounded-lg
-                     bg-gradient-to-r from-blue-500/5 to-purple-500/5
-                     border border-blue-500/10
-                     text-gray-400 cursor-default"
+          className="px-3 py-1 text-[11px] rounded-lg cursor-default transition-colors duration-300"
+          style={{
+            backgroundColor: 'rgba(255,255,255,0.04)',
+            color: 'var(--text-muted)',
+            border: '1px solid var(--surface-border)',
+          }}
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4, delay: 1.5 + delay }}
           whileHover={{
             scale: 1.05,
-            borderColor: 'rgba(59,130,246,0.3)',
-            color: 'rgba(191,219,254,0.9)',
+            borderColor: 'var(--accent)',
+            color: 'var(--accent)',
           }}
         >
           {skill}

@@ -21,15 +21,21 @@ export function TechPills() {
       {pills.map(({ tech, delay }) => (
         <motion.span
           key={tech}
-          className="px-3 py-1.5 text-xs rounded-full
-                     border border-white/[0.06] bg-white/[0.02]
-                     text-gray-500 cursor-default select-none
-                     hover:border-[var(--theme-primary)]/30 hover:text-[var(--theme-primary)]/80
-                     transition-colors duration-300"
+          className="px-3 py-1.5 text-xs rounded-full cursor-default select-none transition-colors duration-300"
+          style={{
+            backgroundColor: 'rgba(255,255,255,0.04)',
+            color: 'var(--text-muted)',
+            border: '1px solid var(--surface-border)',
+          }}
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.5, delay: 1.2 + delay }}
-          whileHover={{ scale: 1.1, y: -3 }}
+          whileHover={{
+            scale: 1.08,
+            y: -2,
+            borderColor: 'var(--accent)',
+            color: 'var(--accent)',
+          }}
         >
           {tech}
         </motion.span>

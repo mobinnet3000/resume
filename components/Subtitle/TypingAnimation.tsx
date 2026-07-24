@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect, useCallback } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
+import { motion } from 'framer-motion'
 import { TITLES } from '@/constants'
 
 export function TypingAnimation() {
@@ -42,25 +42,21 @@ export function TypingAnimation() {
 
   return (
     <motion.div
-      className="text-lg md:text-xl text-gray-400 mt-3 h-8 flex items-center justify-center font-light tracking-wide"
+      className="mt-3 h-6 flex items-center justify-center"
+      style={{
+        fontFamily: 'var(--font-mono)',
+        fontSize: 'clamp(14px, 2.4vw, 17px)',
+        color: 'var(--text-secondary)',
+      }}
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      transition={{ duration: 0.8, delay: 0.8 }}
+      transition={{ duration: 0.7, delay: 0.6 }}
     >
-      <span className="text-blue-400 mr-2">&gt;</span>
-      <AnimatePresence mode="popLayout">
-        <motion.span
-          key={current}
-          initial={{ opacity: 0, y: 5 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -5 }}
-          transition={{ duration: 0.15 }}
-        >
-          {current.slice(0, charIndex)}
-        </motion.span>
-      </AnimatePresence>
+      <span style={{ color: 'var(--accent)' }} className="mr-2">&gt;</span>
+      <span>{current.slice(0, charIndex)}</span>
       <motion.span
-        className="w-[2px] h-5 bg-blue-400 ml-1 inline-block"
+        className="w-[2px] h-4 ml-0.5 inline-block"
+        style={{ backgroundColor: 'var(--accent)' }}
         animate={{ opacity: visible ? 1 : 0 }}
         transition={{ duration: 0.1 }}
       />

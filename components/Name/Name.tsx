@@ -1,35 +1,24 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { SITE_CONFIG } from '@/constants'
 
 export function Name() {
   return (
     <motion.h1
-      className="text-5xl md:text-7xl font-bold tracking-tight text-white mt-6"
+      className="font-sans tracking-tight mt-6 text-center"
+      style={{
+        fontFamily: 'var(--font-sans)',
+        letterSpacing: '-1.5px',
+        fontSize: 'clamp(32px, 7.5vw, 56px)',
+        fontWeight: 700,
+        lineHeight: 1.05,
+      }}
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.8, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
+      transition={{ duration: 0.7, delay: 0.35, ease: [0.22, 1, 0.36, 1] }}
     >
-      {SITE_CONFIG.name.split(' ').map((word, i) => (
-        <span key={i} className="inline-block mr-[0.1em]">
-          {word.split('').map((char, j) => (
-            <motion.span
-              key={j}
-              className="inline-block"
-              initial={{ opacity: 0, y: 40, rotateX: -90 }}
-              animate={{ opacity: 1, y: 0, rotateX: 0 }}
-              transition={{
-                duration: 0.6,
-                delay: 0.5 + i * 0.15 + j * 0.04,
-                ease: [0.16, 1, 0.3, 1],
-              }}
-            >
-              {char}
-            </motion.span>
-          ))}
-        </span>
-      ))}
+      <span style={{ color: 'var(--accent)' }}>Mobin</span>{' '}
+      <span style={{ color: 'var(--accent-yellow)' }}>Bastai</span>
     </motion.h1>
   )
 }
