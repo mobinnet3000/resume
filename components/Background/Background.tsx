@@ -1,24 +1,15 @@
 'use client'
 
-import dynamic from 'next/dynamic'
-import { ShaderBackground } from './ShaderBackground'
-import { NoiseTexture } from './NoiseTexture'
-import { GlowingBlobs } from './GlowingBlobs'
-import { DepthFog } from './DepthFog'
-
-const Scene = dynamic(
-  () => import('@/three/Scene').then((m) => ({ default: m.Scene })),
-  { ssr: false }
-)
+import { useReducedMotion } from '@/hooks/useReducedMotion'
+import { SimpleParticles } from './SimpleParticles'
 
 export function Background() {
+  const reduce = useReducedMotion()
+
   return (
     <>
-      <ShaderBackground />
-      <NoiseTexture />
-      <GlowingBlobs />
-      <DepthFog />
-      <Scene />
+      <div className="fixed inset-0 -z-10 bg-[#040404]" />
+      {!reduce && <SimpleParticles />}
     </>
   )
 }
