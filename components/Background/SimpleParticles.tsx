@@ -14,10 +14,9 @@ interface Ball {
   scaleY: number
 }
 
-const COLORS = ['#3b82f6', '#8b5cf6', '#06b6d4', '#ffffff']
+const COLORS = ['#f78b1c', '#f4ce23', '#ffffff']
 const COUNT = 45
 const INTERACTION_RADIUS = 150
-const MAX_SPEED = 0.6
 
 export function SimpleParticles() {
   const canvasRef = useRef<HTMLCanvasElement>(null!)
@@ -43,8 +42,8 @@ export function SimpleParticles() {
       balls.push({
         x: Math.random() * canvas.width,
         y: Math.random() * canvas.height,
-        vx: (Math.random() - 0.5) * MAX_SPEED,
-        vy: (Math.random() - 0.5) * MAX_SPEED,
+        vx: (Math.random() - 0.5) * 0.5,
+        vy: (Math.random() - 0.5) * 0.5,
         radius: 0.5 + Math.random() * 2,
         color: COLORS[Math.floor(Math.random() * COLORS.length)],
         scaleX: 1,
@@ -76,22 +75,30 @@ export function SimpleParticles() {
 
         if (dist < INTERACTION_RADIUS && dist > 0) {
           const force = (1 - dist / INTERACTION_RADIUS) * 0.02
+          b.scaleX = 4
+          b.scaleY = 4
           const orbitX = -dy / dist
           const orbitY = dx / dist
           b.vx += orbitX * force + (dx / dist) * force * 0.3
           b.vy += orbitY * force + (dy / dist) * force * 0.3
           const speed = Math.sqrt(b.vx * b.vx + b.vy * b.vy)
-          if (speed > MAX_SPEED * 3) {
-            b.vx = (b.vx / speed) * MAX_SPEED * 3
-            b.vy = (b.vy / speed) * MAX_SPEED * 3
+          if (speed > 2) {
+            b.vx = (b.vx / speed) * 2
+            b.vy = (b.vy / speed) * 2
           }
+        } else if (dist < INTERACTION_RADIUS * 1.5) {
+          b.scaleX = 0.6
+          b.scaleY = 0.6
+        } else {
+          b.scaleX = 1
+          b.scaleY = 1
         }
 
         ctx.save()
         ctx.translate(b.x, b.y)
         ctx.scale(b.scaleX, b.scaleY)
         ctx.fillStyle = b.color
-        ctx.globalAlpha = 0.5
+        ctx.globalAlpha = 0.9
         ctx.beginPath()
         ctx.arc(0, 0, b.radius, 0, Math.PI * 2)
         ctx.fill()
@@ -113,7 +120,8 @@ export function SimpleParticles() {
   return (
     <canvas
       ref={canvasRef}
-      className="fixed inset-0 -z-8 pointer-events-none"
+      className="fixed inset-0 pointer-events-none"
+      style={{ display: 'block', width: '100%', height: '100%' }}
     />
   )
 }
