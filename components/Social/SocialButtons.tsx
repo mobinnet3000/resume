@@ -58,9 +58,8 @@ function SocialIcon({ name, url }: { name: string; url: string }) {
       onMouseMove={handleMouse}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={handleLeave}
-      className="flex items-center justify-center rounded-xl transition-colors duration-200"
+      className="flex items-center justify-center rounded-xl transition-colors duration-200 w-[40px] h-[40px] md:w-[48px] md:h-[48px]"
       style={{
-        width: 48, height: 48,
         backgroundColor: hovered ? 'var(--accent-soft)' : 'var(--surface)',
         border: '1px solid',
         borderColor: hovered ? 'var(--accent-yellow)' : 'var(--surface-border)',
@@ -70,14 +69,14 @@ function SocialIcon({ name, url }: { name: string; url: string }) {
       whileHover={{ scale: 1.08 }}
       whileTap={{ scale: 0.95 }}
     >
-      <Icon className="w-5 h-5 transition-colors duration-200" style={{ color: hovered ? 'var(--accent-yellow)' : 'var(--text-secondary)' }} />
+      <Icon className="w-[18px] h-[18px] md:w-5 md:h-5 transition-colors duration-200" style={{ color: hovered ? 'var(--accent-yellow)' : 'var(--text-secondary)' }} />
     </motion.a>
   )
 }
 
 export function SocialButtons({ links = DEFAULT_LINKS }: Props) {
   return (
-    <motion.div className="flex items-center gap-4 mt-8 justify-center" variants={staggerContainer} initial="hidden" animate="visible">
+    <motion.div className="flex items-center gap-2 md:gap-4 mt-6 md:mt-8 justify-center flex-wrap" variants={staggerContainer} initial="hidden" animate="visible">
       {links.map((link) => (
         <SocialIcon key={link.name} name={link.name} url={link.url} />
       ))}

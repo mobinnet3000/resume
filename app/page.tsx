@@ -88,7 +88,7 @@ export default function Home() {
             <TypingAnimation texts={cfg.roleTexts} />
           </div>
 
-          <div className="w-full p-4 md:p-6 rounded-2xl" style={{
+          <div className="w-full p-3 md:p-6 rounded-2xl" style={{
             background: 'linear-gradient(135deg, var(--surface), rgba(18,18,25,0.95))',
             border: '1px solid var(--surface-border)',
             boxShadow: '0 24px 48px -16px rgba(0,0,0,0.5)',
@@ -97,7 +97,7 @@ export default function Home() {
             <div className="absolute top-[-50%] left-1/2 w-3/5 h-3/5 -translate-x-1/2 pointer-events-none" style={{ background: 'radial-gradient(ellipse, var(--accent-soft) 0%, transparent 70%)' }} />
             <div className="relative z-[1]">
               <CodeLines />
-              <div className="flex gap-2 md:gap-3 mt-3 md:mt-4">
+              <div className="flex gap-2 mt-3 md:mt-4">
                 <TypingPlaceholder ref={typingRef} messages={cfg.messages} />
                 <button type="button" onClick={() => typingRef.current?.next()} aria-label="Next message"
                   className="w-[44px] h-[44px] md:w-[48px] md:h-[48px] rounded-xl flex items-center justify-center shrink-0 transition-all duration-200"
