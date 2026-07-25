@@ -61,6 +61,18 @@ export default function Home() {
 
   useEffect(() => { fetchConfig().then(setCfg) }, [])
 
+  // Dynamic page title
+  useEffect(() => {
+    const titles = cfg.roleTexts.map((t) => `Mobin Bastai | ${t}`)
+    let i = 0
+    document.title = titles[0]
+    const timer = setInterval(() => {
+      i = (i + 1) % titles.length
+      document.title = titles[i]
+    }, 3000)
+    return () => clearInterval(timer)
+  }, [cfg.roleTexts])
+
   useEffect(() => {
     const update = () => setTime(new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', timeZone: cfg.timezone }))
     update()
