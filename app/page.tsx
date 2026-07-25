@@ -61,17 +61,25 @@ export default function Home() {
 
   useEffect(() => { fetchConfig().then(setCfg) }, [])
 
-  // Dynamic page title
+  // Dynamic page title — typewriter "Mobin Bastani"
   useEffect(() => {
-    const titles = cfg.roleTexts.map((t) => `Mobin Bastai | ${t}`)
-    let i = 0
-    document.title = titles[0]
+    const text = 'Mobin Bastani'
+    let idx = 0
+    let deleting = false
+    document.title = '|'
     const timer = setInterval(() => {
-      i = (i + 1) % titles.length
-      document.title = titles[i]
-    }, 3000)
+      if (!deleting) {
+        idx++
+        document.title = text.slice(0, idx) + '|'
+        if (idx >= text.length) { deleting = true; idx = text.length }
+      } else {
+        idx--
+        document.title = text.slice(0, idx) + '|'
+        if (idx <= 0) { deleting = false; idx = 0 }
+      }
+    }, 200)
     return () => clearInterval(timer)
-  }, [cfg.roleTexts])
+  }, [])
 
   useEffect(() => {
     const update = () => setTime(new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', timeZone: cfg.timezone }))
