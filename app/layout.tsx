@@ -7,6 +7,11 @@ export const metadata: Metadata = {
   description: 'Premium interactive developer portfolio. Full Stack Developer, Flutter Developer, AI Engineer, and Open Source Enthusiast.',
   keywords: ['developer', 'portfolio', 'full stack', 'next.js', 'flutter', 'ai engineer'],
   authors: [{ name: 'Mobin Bastai' }],
+  icons: {
+    icon: '/favicon.svg',
+    shortcut: '/favicon.svg',
+    apple: '/favicon.svg',
+  },
   openGraph: {
     title: 'Mobin Bastai | Full Stack Developer',
     description: 'Premium interactive developer portfolio.',
